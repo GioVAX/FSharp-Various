@@ -1,21 +1,10 @@
 ﻿module Parsers
 
-open System
 open ParserTypes
-open ParserTools
+open ParserMonad
+open ParserUtils
 
 //let private parser = new ParserBuilder()
-
-let (|Prefix|_|) c (s:string) =
-    if s.[0] = c then
-        Some(s.Substring(1))
-    else
-        None
-
-let private cons head tail = head::tail
-
-let private charListToString = List.toArray >> String
-let private charListToInt = charListToString >> int
 
 let pchar charToMatch = 
     let innerFn = function
@@ -73,7 +62,7 @@ let pstring str =
     |> sequence
     |> mapP charListToString
 
-let parseZeroOrMore parser =
+let private parseZeroOrMore parser =
     let rec innerFn input = 
         let res = run parser input
         match res with
@@ -95,7 +84,7 @@ let many1 parser =
 
 let parseDigit = anyOf ['0'..'9']
 
-let opt parser =
+let optional parser =
     let some = parser |>> Some
     let none = returnP None
     some <|> none
@@ -110,14 +99,14 @@ let parseInt =
     let digits = many1 parseDigit
     
     //resultToInt <!> (opt (pchar '-') .>>. digits)
-    opt (pchar '-') .>>. digits
+    optional (pchar '-') .>>. digits
     |>> resultToInt
 
 let between before parser after =
     before >>. parser .>> after
 
 let private sepByHelper parser sep composer =
-    parser .>> (opt sep)
+    parser .>> (optional sep)
     |> composer
 
 let sepBy1 parser separatorP =

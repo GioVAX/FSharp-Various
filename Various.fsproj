@@ -7,7 +7,8 @@
   <ItemGroup>
     <Compile Include="Parser\ParserTypes.fs" />
     <Compile Include="Parser\ParserBuilder.fs" />
-    <Compile Include="Parser\ParserTools.fs" />
+    <Compile Include="Parser\ParserUtils.fs" />
+    <Compile Include="Parser\ParserMonad.fs" />
     <Compile Include="Parser\Parsers.fs" />
     <Compile Include="RunProcess.fs" />
     <Compile Include="various.fs" />

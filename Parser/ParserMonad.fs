@@ -1,13 +1,13 @@
-﻿module ParserTools
+﻿module ParserMonad
 
 open ParserTypes
 
-let bindP fn p1 =
+let bindP f p =
     let innerFn input = 
-        match run p1 input with
+        match run p input with
         | Failure err -> Failure err
         | Success (v1, remainingInput) 
-            -> run (fn v1) remainingInput
+            -> run (f v1) remainingInput
     Parser innerFn
 
 let ( >>= ) p f = bindP f p
@@ -28,19 +28,22 @@ let mapP f = bindP (f >> returnP)
 let ( <!> ) = mapP
 let ( |>> ) x f = mapP f x
 
-let concatenateP p1 p2 =
+let concatenateP p1 p2  =
     p1 >>= (fun r1 -> 
     p2 >>= (fun r2 -> 
         returnP (r1, r2)))
 
-let applyP fP xP =
-    concatenateP fP xP
+//let concatenateP = 
+//    concatenate (fun r1 r2 -> (r1, r2))
+
+let applyP f p =
+    concatenateP f p
     |> mapP (fun (f, x) -> f x)
 
-let applyMapP fP xP =
-    (fun (f, x) -> f x) <!> concatenateP fP xP
+let applyMapP f p =
+    (fun (f, x) -> f x) <!> concatenateP f p
 
 let ( <*> ) = applyP
 
-let lift2P f xP yP =
-    returnP f <*> xP <*> yP
+let lift2P f p1 p2 =
+    returnP f <*> p1 <*> p2
