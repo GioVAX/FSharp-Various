@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Parser\ParserTypes.fs" />
+    <Compile Include="Parser\ParserBuilder.fs" />
+    <Compile Include="Parser\ParserTools.fs" />
+    <Compile Include="Parser\Parsers.fs" />
+    <Compile Include="RunProcess.fs" />
+    <Compile Include="various.fs" />
+  </ItemGroup>
+
+</Project>
