@@ -6,6 +6,6 @@ type ParserBuilder() =
     member this.Return(x) =
         x
 
-//let private parser = new ParserBuilder()
+let parser = new ParserBuilder()
 
 
