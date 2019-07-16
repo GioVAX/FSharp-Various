@@ -7,10 +7,15 @@ open FsUnit.Xunit
 
 open ParserTypes
 open Parsers
+open ParserUtils
 
 let private checkFailure fcheck message = function
     | Failure msg -> msg |> should fcheck message
     | _ -> Assert.False( true, "This should have failed!")
+
+let private checkSuccess fcheck = function
+    | Success(c, s) -> fcheck c s
+    | _ -> Assert.False( true, "This should have succeeded!")
 
 [<Property>]
 let ``Parsing anything from an empty string SHOULD fail`` (c: char) =
@@ -26,10 +31,29 @@ let ``Parsing for the correct first char SHOULD return success`` (str: NonEmptyS
     let s = str.Get
     let firstChar = s.[0]
     let parser = pchar firstChar;
-    let expected = Success (firstChar, s.[1..])
 
     let result = run parser s
-    result |> should equal expected
+    result |> checkSuccess (fun _ _ -> ())
+
+[<Property>]
+let ``Parsing for the correct first char SHOULD return the matched char`` (str: NonEmptyString) =
+    let s = str.Get
+    let firstChar = s.[0]
+    let parser = pchar firstChar;
+
+    let result = run parser s
+    result |> checkSuccess (fun c _ -> c |> should equal firstChar)
+
+[<Property>]
+let ``Parsing for the correct first char SHOULD return the remaining input without the first char`` (str: NonEmptyString) =
+    let s = str.Get
+    match s |> Seq.toList with
+    | [] -> failwith "This should have been a NonEmptyString!"
+    | (firstChar::tail) ->
+        let parser = pchar firstChar;
+
+        let result = run parser s
+        result |> checkSuccess (fun _ s -> s |> should equal (charListToString tail))
 
 [<Property>]
 let ``Parsing for the wrong first char SHOULD fail`` (str: NonEmptyString) =
@@ -38,9 +62,19 @@ let ``Parsing for the wrong first char SHOULD fail`` (str: NonEmptyString) =
                     | 'a' -> 'b'
                     | _ -> 'a'
     let parser = pchar c
-    let expectedMsg = sprintf "Expecting '%c'. Got " c 
+    let expectedMsg = sprintf "Expecting '%c'. Got '%c'" c s.[0] 
 
     let result = run parser s
 
     result
     |> checkFailure startWith expectedMsg
+
+[<Property>]
+let ``Parsing successfully a one char string SHOULD succeed and return an empty remaining input`` (c:char) =
+    let s = [c] |> charListToString
+    let parser = pchar c
+    let expected = Success(c, "")
+
+    let result = run parser s
+
+    result |> should equal expected
