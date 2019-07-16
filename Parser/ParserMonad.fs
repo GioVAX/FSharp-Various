@@ -1,7 +1,6 @@
 ﻿module ParserMonad
 
 open ParserTypes
-open ParserBuilder
 
 let bindP f p =
     let innerFn input = 
@@ -29,21 +28,27 @@ let mapP f = bindP (f >> returnP)
 let ( <!> ) = mapP
 let ( |>> ) x f = mapP f x
 
-let concatenateP p1 p2  =
-    p1 >>= (fun r1 -> 
-    p2 >>= (fun r2 -> 
-        returnP (r1, r2)))
-
-//let concatenateP = 
-//    concatenate (fun r1 r2 -> (r1, r2))
-let conc p1 p2 =
+let internal _concatenate combiner p1 p2 =
     let innerFn input =
-        parser {
+        ParserBuilder.parser {
             let! Success (r1, input2) = run p1 input
             let! Success (r2, final) = run p2 input2
-            return (Success ((r1, r2), final))
+            return (Success (combiner r1 r2, final))
         }
     Parser innerFn
+//let internal _concatenate combiner (p1: Parser<'a>) (p2:Parser<'b>) =
+//    p1 >>= (fun r1 -> 
+//    p2 >>= (fun r2 -> 
+//        combiner r1 r2
+//        |> returnP))
+
+let internal concatenateToTuple p1 p2 = 
+    _concatenate (fun r1 r2 -> (r1, r2)) p1 p2
+
+let internal concatenateToList p1 p2 = 
+    _concatenate (fun r1 r2 -> [r1;r2]) p1 p2
+
+let concatenateP = concatenateToTuple
 
 let applyP f p =
     concatenateP f p
