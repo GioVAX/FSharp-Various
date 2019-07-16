@@ -1,6 +1,5 @@
 module ParserTests
 
-open Xunit
 open FsCheck
 open FsCheck.Xunit
 open FsUnit.Xunit
@@ -11,11 +10,11 @@ open ParserUtils
 
 let private checkFailure fcheck message = function
     | Failure msg -> msg |> should fcheck message
-    | _ -> Assert.False( true, "This should have failed!")
+    | _ -> failwith "This should have failed!"
 
 let private checkSuccess fcheck = function
     | Success(c, s) -> fcheck c s
-    | _ -> Assert.False( true, "This should have succeeded!")
+    | _ -> failwith "This should have succeeded!"
 
 [<Property>]
 let ``Parsing anything from an empty string SHOULD fail`` (c: char) =
