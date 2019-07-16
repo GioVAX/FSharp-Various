@@ -13,8 +13,11 @@ let private checkFailure fcheck message = function
     | _ -> failwith "This should have failed!"
 
 let private checkSuccess fcheck = function
-    | Success(c, s) -> fcheck c s
+    | Success(matched, remainingInput) -> fcheck matched remainingInput
     | _ -> failwith "This should have succeeded!"
+
+let private checkMatched expected = checkSuccess (fun res _ -> res |> should equal expected)
+let private checkRemaining expected = checkSuccess (fun _ input -> input |> should equal expected)
 
 [<Property>]
 let ``Parsing anything from an empty string SHOULD fail`` (c: char) =
@@ -42,7 +45,7 @@ type ``Parsing for the correct first char`` () =
         let parser = pchar firstChar;
 
         let result = run parser s
-        result |> checkSuccess (fun c _ -> c |> should equal firstChar)
+        result |> checkMatched firstChar
 
     [<Property>]
     member x.``SHOULD return the remaining input without the first char`` (str: NonEmptyString) =
@@ -53,7 +56,7 @@ type ``Parsing for the correct first char`` () =
             let parser = pchar firstChar;
 
             let result = run parser s
-            result |> checkSuccess (fun _ s -> s |> should equal (charListToString tail))
+            result |> checkRemaining (charListToString tail)
 
     [<Property>]
     member x.``from a one char input string SHOULD succeed and return an empty remaining input`` (c:char) =
@@ -80,14 +83,13 @@ let ``Parsing for the wrong first char SHOULD fail`` (str: NonEmptyString) =
     |> checkFailure startWith expectedMsg
 
 [<Property>]
-let ``Concatenating 2 parser chars SHOULD succeed when the input starts with those chars`` (c1: char, c2:char, str:NonEmptyString) =
+let ``Concatenating 2 parser chars SHOULD match the 2 chars when the input starts with those chars`` (c1: char, c2:char, str:NonEmptyString) =
     let input = (Seq.append [c1;c2] str.Get)
                 |> Seq.toArray
                 |> System.String
-    let expected = Success((c1, c2), str.Get)
     let pc1 = pchar c1
     let pc2 = pchar c2
 
     let result = run (pc1 .>>. pc2) input
 
-    result |> should equal expected
+    result |> checkMatched (c1, c2)
