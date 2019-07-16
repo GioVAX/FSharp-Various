@@ -12,9 +12,15 @@ let bindP f p =
 
 let ( >>= ) p f = bindP f p
 
+
+
+
 let returnP x =
     let innerFn input = Success (x,input)
     Parser innerFn  
+
+
+
 
 let mapP f = bindP (f >> returnP)
 //let mapP f parser =
@@ -27,6 +33,9 @@ let mapP f = bindP (f >> returnP)
 
 let ( <!> ) = mapP
 let ( |>> ) x f = mapP f x
+
+
+
 
 let internal _concatenate combiner p1 p2 =
     let innerFn input =
@@ -50,6 +59,9 @@ let internal concatenateToList p1 p2 =
 
 let concatenateP = concatenateToTuple
 
+
+
+
 let applyP f p =
     concatenateP f p
     |> mapP (fun (f, x) -> f x)
@@ -58,6 +70,9 @@ let applyMapP f p =
     (fun (f, x) -> f x) <!> concatenateP f p
 
 let ( <*> ) = applyP
+
+
+
 
 let lift2P f p1 p2 =
     returnP f <*> p1 <*> p2
