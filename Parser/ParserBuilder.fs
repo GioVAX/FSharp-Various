@@ -9,6 +9,6 @@ type ParserBuilder() =
         | _ -> f x
 
     member this.Return(x) =
-        x
+        Success x
 
 let parser = new ParserBuilder()

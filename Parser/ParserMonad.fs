@@ -31,9 +31,9 @@ let ( |>> ) x f = mapP f x
 let internal _concatenate combiner p1 p2 =
     let innerFn input =
         ParserBuilder.parser {
-            let! Success (r1, input2) = run p1 input
-            let! Success (r2, final) = run p2 input2
-            return (Success (combiner r1 r2, final))
+            let! Success (r1, midInput) = run p1 input
+            let! Success (r2, remainingInput) = run p2 midInput
+            return (combiner r1 r2, remainingInput)
         }
     Parser innerFn
 //let internal _concatenate combiner (p1: Parser<'a>) (p2:Parser<'b>) =
