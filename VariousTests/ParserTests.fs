@@ -79,3 +79,15 @@ let ``Parsing for the wrong first char SHOULD fail`` (str: NonEmptyString) =
     result
     |> checkFailure startWith expectedMsg
 
+[<Property>]
+let ``Concatenating 2 parser chars SHOULD succeed when the input starts with those chars`` (c1: char, c2:char, str:NonEmptyString) =
+    let input = (Seq.append [c1;c2] str.Get)
+                |> Seq.toArray
+                |> System.String
+    let expected = Success((c1, c2), str.Get)
+    let pc1 = pchar c1
+    let pc2 = pchar c2
+
+    let result = run (pc1 .>>. pc2) input
+
+    result |> should equal expected
