@@ -116,7 +116,7 @@ let sepBy parser separatorP =
     sepByHelper parser separatorP many
 
 (* 
-#load "parser.fs"; open Parser;;
+#load "parserTypes.fs"; #load "parserbuilder.fs"; #load "parserutils.fs"; #load "parsermonad.fs";  #load "parsers.fs"; open Parser;;
 let parseA = pchar 'a'
 let parseB = pchar 'b'
  
