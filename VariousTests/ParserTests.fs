@@ -82,7 +82,7 @@ let ``Parsing for the wrong first char SHOULD fail`` (str: NonWhiteSpaceString )
     result
     |> checkFailure startWith expectedMsg
 
-type ``Concatenate 2 parsers`` () =
+type ``andThen 2 parsers`` () =
     let buildInput c1 c2 str =
         (Seq.append [c1;c2] str)
         |> Seq.toArray
@@ -114,27 +114,27 @@ type ``Concatenate 2 parsers`` () =
         run (pc1 .>>. pc2) input
 
     [<Property>]
-    member x.``when successful SHOULD return the 2 matches in a tuple`` (c1: char, c2:char, str:NonWhiteSpaceString) =
+    member x.``when successful SHOULD return the 2 matches in a tuple`` (c1: char) (c2:char) (str:NonWhiteSpaceString) =
         let result = successfulParse c1 c2 str.Get
         result |> checkMatched (c1, c2)
 
     [<Property>]
-    member x.``when successful SHOULD remove the matches from the returned input`` (c1: char, c2:char, str:NonWhiteSpaceString) =
+    member x.``when successful SHOULD remove the matches from the returned input`` (c1: char) (c2:char) (str:NonWhiteSpaceString) =
         let s = str.Get
         let result = successfulParse c1 c2 s
         result |> checkRemaining s
 
     [<Property>]
-    member x.``when input contains only the first parser SHOULD fail for no more input`` (c1: char, c2:char) =
+    member x.``when input contains only the first parser SHOULD fail for no more input`` (c1: char) (c2:char) =
         let result = failurexxx c1 c2
 
         result 
         |> checkFailure equal "No more input"
 
     [<Property>]
-    member x.``when fails on the first parser SHOULD specify the failure was the first parser`` (c1: char, c2:char, str:NonWhiteSpaceString) =
-        (str.Get.Length > 1 && c1 <> c2)
-        ==> 
+    member x.``when fails on the first parser SHOULD specify the failure was the first parser`` (c1:char) (c2:char) (str:NonWhiteSpaceString) =
+        ((str.Get.Length > 0) && (c1 <> c2))
+        ==> lazy
         let expectedMsg = sprintf "Expecting '%c'." c1
         
         let result = failure1stParse c1 c2 str.Get
@@ -142,9 +142,9 @@ type ``Concatenate 2 parsers`` () =
         result |> checkFailure startWith expectedMsg
 
     [<Property>]
-    member x.``when fails on the second parser SHOULD specify the failure was the second parser`` (c1: char, c2:char, str:NonWhiteSpaceString) =
-        (str.Get.Length > 1 && c1 <> c2)
-        ==> 
+    member x.``when fails on the second parser SHOULD specify the failure was the second parser`` (c1: char) (c2:char) (str:NonWhiteSpaceString) =
+        (str.Get.Length > 0 && c1 <> c2)
+        ==> lazy
         let expectedMsg = sprintf "Expecting '%c'." c2
         
         let result = failure2ndParse c1 c2 str.Get
