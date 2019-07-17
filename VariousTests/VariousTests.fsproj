@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="ParserTests.fs" />
+    <Compile Include="ParserTests\ParserTestsUtils.fs" />
+    <Compile Include="ParserTests\pchar.fs" />
+    <Compile Include="ParserTests\andThen.fs" />
+    <Compile Include="ParserTests\ParserTests.fs" />
   </ItemGroup>
 
   <ItemGroup>
