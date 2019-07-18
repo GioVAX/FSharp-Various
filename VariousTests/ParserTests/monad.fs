@@ -9,7 +9,7 @@ open Parsers
 
 open ParserTestsUtils
 
-type ``-> bind`` () =
+type ``-> bindP`` () =
 
     let buildInput c1 c2 str =
         (Seq.append [c1;c2] str)
@@ -41,3 +41,20 @@ type ``-> bind`` () =
 
         result
         |> checkFailure "Expecting"
+
+type ``-> returnP`` () = 
+    member x.``returnP SHOULD wrap anything in Success`` anything (input:string) =
+        let parser = returnP anything
+
+        let result = run parser input
+
+        result
+        |> checkMatched anything
+
+    member x.``returnP SHOULD not change the input`` anything (input:string) =
+        let parser = returnP anything
+
+        let result = run parser input
+
+        result
+        |> checkRemaining input
