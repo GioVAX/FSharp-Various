@@ -1,4 +1,4 @@
-﻿module monad
+﻿module bindP
 
 open FsCheck
 open FsCheck.Xunit
@@ -10,11 +10,6 @@ open Parsers
 open ParserTestsUtils
 
 type ``-> bindP`` () =
-
-    let buildInput c1 c2 str =
-        (Seq.append [c1;c2] str)
-        |> Seq.toArray
-        |> System.String
 
     [<Property>]
     member x.``WHEN first parser succeeds, SHOULD call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
@@ -42,19 +37,29 @@ type ``-> bindP`` () =
         result
         |> checkFailure "Expecting"
 
-type ``-> returnP`` () = 
-    member x.``returnP SHOULD wrap anything in Success`` anything (input:string) =
-        let parser = returnP anything
+type ``-> bindP infix`` () =
+    [<Property>]
+    member x.``WHEN first parser succeeds, SHOULD call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
+        c1 <> c2 
+        ==> lazy
+        let f _ = pchar c2
+        let p1 = pchar c1
+        let input = buildInput c1 c2 s.Get
 
-        let result = run parser input
-
-        result
-        |> checkMatched anything
-
-    member x.``returnP SHOULD not change the input`` anything (input:string) =
-        let parser = returnP anything
-
-        let result = run parser input
+        let result = run (p1 >>= f) input
 
         result
-        |> checkRemaining input
+        |> checkRemaining s.Get
+
+    [<Property>]
+    member x.``WHEN first parser fails, SHOULD not call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
+        c1 <> c2 
+        ==> lazy
+        let f _ = failwith "This should not be called!"
+        let p1 = pchar c2
+        let input = buildInput c1 c2 s.Get
+
+        let result = run (p1 >>= f) input
+
+        result
+        |> checkFailure "Expecting"

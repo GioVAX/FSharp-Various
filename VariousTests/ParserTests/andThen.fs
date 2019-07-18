@@ -11,11 +11,6 @@ open ParserTestsUtils
 
 type ``-> concatenate 2 parsers`` () =
 
-    let buildInput c1 c2 str =
-        (Seq.append [c1;c2] str)
-        |> Seq.toArray
-        |> System.String
-
     let parse c1 c2 input = 
         let pc1 = pchar c1
         let pc2 = pchar c2

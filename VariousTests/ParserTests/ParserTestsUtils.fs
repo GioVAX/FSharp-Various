@@ -17,3 +17,8 @@ let checkMatched expected =
 
 let checkRemaining expected = 
     checkSuccess (fun _ input -> input |> should equal expected)
+
+let buildInput c1 c2 str =
+    (Seq.append [c1;c2] str)
+    |> Seq.toArray
+    |> System.String
