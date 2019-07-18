@@ -1,15 +1,17 @@
-﻿module andThen
+﻿module concatenateP
 
 open FsCheck
 open FsCheck.Xunit
+open FsUnit.Xunit
 
 open ParserTypes
-open Parsers
 open ParserUtils
+open ParserMonad
+open Parsers
 
 open ParserTestsUtils
 
-type ``-> concatenate 2 parsers`` () =
+type ``-> concatenateP`` () =
 
     let parse c1 c2 input = 
         let pc1 = pchar c1
@@ -67,3 +69,5 @@ type ``-> concatenate 2 parsers`` () =
         
         failure2ndParse c1 c2 str.Get
         |> checkFailure expectedMsg
+
+
