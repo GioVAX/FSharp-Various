@@ -11,55 +11,49 @@ open ParserTestsUtils
 
 type ``-> bindP`` () =
 
+    let checkSecondIsCalled c1 c2 s parserBuilder =
+        let f _ = pchar c2
+        let p1 = pchar c1
+        let input = buildInput c1 c2 s
+        let parser = parserBuilder f p1
+
+        let result = run parser input
+
+        result
+        |> checkRemaining s
+
+    let checkSecondIsNOTCalled c1 c2 s parserBuilder =
+        let f _ = failwith "This should not be called!"
+        let p1 = pchar c2
+        let input = buildInput c1 c2 s
+        let parser = parserBuilder f p1
+
+        let result = run parser input
+
+        result
+        |> checkFailure "Expecting"
+
+
     [<Property>]
     member x.``WHEN first parser succeeds, SHOULD call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
         c1 <> c2 
         ==> lazy
-        let f _ = pchar c2
-        let p1 = pchar c1
-        let input = buildInput c1 c2 s.Get
-
-        let result = run (bindP f p1) input
-
-        result
-        |> checkRemaining s.Get
+        checkSecondIsCalled c1 c2 s.Get (fun f p -> bindP f p)
 
     [<Property>]
     member x.``WHEN first parser fails, SHOULD not call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
         c1 <> c2 
         ==> lazy
-        let f _ = failwith "This should not be called!"
-        let p1 = pchar c2
-        let input = buildInput c1 c2 s.Get
-
-        let result = run (bindP f p1) input
-
-        result
-        |> checkFailure "Expecting"
-
-type ``-> bindP infix`` () =
-    [<Property>]
-    member x.``WHEN first parser succeeds, SHOULD call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
-        c1 <> c2 
-        ==> lazy
-        let f _ = pchar c2
-        let p1 = pchar c1
-        let input = buildInput c1 c2 s.Get
-
-        let result = run (p1 >>= f) input
-
-        result
-        |> checkRemaining s.Get
+        checkSecondIsNOTCalled c1 c2 s.Get (fun f p -> bindP f p)
 
     [<Property>]
-    member x.``WHEN first parser fails, SHOULD not call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
+    member x.``infix WHEN first parser succeeds, SHOULD call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
         c1 <> c2 
         ==> lazy
-        let f _ = failwith "This should not be called!"
-        let p1 = pchar c2
-        let input = buildInput c1 c2 s.Get
+        checkSecondIsCalled c1 c2 s.Get (fun f p -> p >>= f)
 
-        let result = run (p1 >>= f) input
-
-        result
-        |> checkFailure "Expecting"
+    [<Property>]
+    member x.``infix WHEN first parser fails, SHOULD not call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
+        c1 <> c2 
+        ==> lazy
+        checkSecondIsNOTCalled c1 c2 s.Get (fun f p -> p >>= f)
