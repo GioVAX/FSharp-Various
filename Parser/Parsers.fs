@@ -19,7 +19,6 @@ let pchar charToMatch =
     Parser innerFn        
 
 let andThen = concatenateP
-let ( .>>. ) = concatenateP
 
 let private justBind selector p1 p2 =
     (p1 .>>. p2) >>= (selector >> returnP)

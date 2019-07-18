@@ -58,6 +58,7 @@ let internal concatenateToList p1 p2 =
     _concatenate (fun r1 r2 -> [r1;r2]) p1 p2
 
 let concatenateP = concatenateToTuple
+let ( .>>. ) = concatenateP
 
 
 
