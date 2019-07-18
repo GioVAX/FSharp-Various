@@ -64,10 +64,7 @@ let concatenateP = concatenateToTuple
 
 let applyP f p =
     concatenateP f p
-    |> mapP (fun (f, x) -> f x)
-
-let applyMapP f p =
-    (fun (f, x) -> f x) <!> concatenateP f p
+    |>> (fun (f, x) -> f x)
 
 let ( <*> ) = applyP
 
