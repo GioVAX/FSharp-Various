@@ -9,30 +9,29 @@ open Parsers
 
 open ParserTestsUtils
 
-type ``-> bindP`` () =
+let private checkSecondIsCalled c1 c2 s parserBuilder =
+    let f _ = pchar c2
+    let p1 = pchar c1
+    let input = buildInput c1 c2 s
+    let parser = parserBuilder f p1
 
-    let checkSecondIsCalled c1 c2 s parserBuilder =
-        let f _ = pchar c2
-        let p1 = pchar c1
-        let input = buildInput c1 c2 s
-        let parser = parserBuilder f p1
+    let result = run parser input
 
-        let result = run parser input
+    result
+    |> checkRemaining s
 
-        result
-        |> checkRemaining s
+let private checkSecondIsNOTCalled c1 c2 s parserBuilder =
+    let f _ = failwith "This should not be called!"
+    let p1 = pchar c2
+    let input = buildInput c1 c2 s
+    let parser = parserBuilder f p1
 
-    let checkSecondIsNOTCalled c1 c2 s parserBuilder =
-        let f _ = failwith "This should not be called!"
-        let p1 = pchar c2
-        let input = buildInput c1 c2 s
-        let parser = parserBuilder f p1
+    let result = run parser input
 
-        let result = run parser input
+    result
+    |> checkFailure "Expecting"
 
-        result
-        |> checkFailure "Expecting"
-
+type ``-> prefix`` () =
 
     [<Property>]
     member x.``WHEN first parser succeeds, SHOULD call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
@@ -46,14 +45,16 @@ type ``-> bindP`` () =
         ==> lazy
         checkSecondIsNOTCalled c1 c2 s.Get (fun f p -> bindP f p)
 
+type ``-> infix`` () =
+
     [<Property>]
-    member x.``infix WHEN first parser succeeds, SHOULD call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
+    member x.``WHEN first parser succeeds, SHOULD call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
         c1 <> c2 
         ==> lazy
         checkSecondIsCalled c1 c2 s.Get (fun f p -> p >>= f)
 
     [<Property>]
-    member x.``infix WHEN first parser fails, SHOULD not call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
+    member x.``WHEN first parser fails, SHOULD not call the second parser`` (c1: char) (c2: char) (s: NonEmptyString) =
         c1 <> c2 
         ==> lazy
         checkSecondIsNOTCalled c1 c2 s.Get (fun f p -> p >>= f)
