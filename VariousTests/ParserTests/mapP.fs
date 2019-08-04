@@ -20,7 +20,7 @@ let private doTest num str parserBuilder checkFn =
     result
     |> checkFn num
 
-let private failingINput = "Failure"
+let private failingInput = "Failure"
 
 let private chkSuccess = checkMatched
 let private chkFail = (fun n -> checkFailure "Expecting")
@@ -35,8 +35,8 @@ type ``-> prefix`` () =
 
     [<Property>]
     member x.``SHOULD fail if no matches`` (num: int32) =
-        doTest num failingINput 
-            (fun s -> mapP (int) (pstring failingINput))  
+        doTest num failingInput 
+            (fun _ -> mapP (int) (pstring failingInput))  
             chkFail
         
 type ``-> infix`` () =
@@ -48,8 +48,8 @@ type ``-> infix`` () =
 
     [<Property>]
     member x.``SHOULD fail if no matches`` (num: int32) =
-        doTest num failingINput 
-            (fun s -> int <!> (pstring failingINput)) 
+        doTest num failingInput 
+            (fun s -> int <!> (pstring failingInput)) 
             chkFail
 
 type ``-> infix inverted params`` () =
@@ -61,6 +61,6 @@ type ``-> infix inverted params`` () =
 
     [<Property>]
     member x.``SHOULD fail if no matches`` (num: int32) (s:NonEmptyString) =
-        doTest num failingINput 
-            (fun s -> (pstring failingINput) |>> int) 
+        doTest num failingInput 
+            (fun s -> (pstring failingInput) |>> int) 
             chkFail
