@@ -40,7 +40,7 @@ type ``-> prefix`` () =
         result |> checkMatched (c1, c2)
 
     [<Property>]
-    member x.``when successful SHOULD remove the matches from the returned input`` (c1: char) (c2:char) (str:NonWhiteSpaceString) =
+    member x.``when successful SHOULD remove both matches from the returned input`` (c1: char) (c2:char) (str:NonWhiteSpaceString) =
         let s = str.Get
         let result = successfulParse concatenateP c1 c2 s
         result |> checkRemaining s
