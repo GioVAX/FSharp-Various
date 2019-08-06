@@ -10,6 +10,7 @@
     <Compile Include="ParserTests\ParserTestsUtils.fs" />
     <Compile Include="ParserTests\ParserTests.fs" />
     <Compile Include="ParserTests\pchar.fs" />
+    <Compile Include="ParserTests\CompositeUtils.fs" />
     <Compile Include="ParserTests\bindP.fs" />
     <Compile Include="ParserTests\returnP.fs" />
     <Compile Include="ParserTests\mapP.fs" />

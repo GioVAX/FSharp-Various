@@ -3,19 +3,10 @@
 open FsCheck
 open FsCheck.Xunit
 
-open ParserTypes
-open ParserUtils
-open ParserMonad
 open Parsers
 
 open ParserTestsUtils
-
-let private parse composer c1 c2 input = 
-    let pc1 = pchar c1
-    let pc2 = pchar c2
-    let parser = composer pc1 pc2
-
-    run parser input
+open CompositeUtils
 
 let private successful1stParse composer c1 c2 str =
     buildInput c1 c2 str
