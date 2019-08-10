@@ -17,6 +17,7 @@
     <Compile Include="ParserTests\concatenateP.fs" />
     <Compile Include="ParserTests\orElse.fs" />
     <Compile Include="ParserTests\choice_anyOf.fs" />
+    <Compile Include="ParserTests\sequence.fs" />
   </ItemGroup>
 
   <ItemGroup>

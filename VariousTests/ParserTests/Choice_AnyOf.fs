@@ -2,7 +2,6 @@
 
 open FsCheck
 open FsCheck.Xunit
-open FsUnit.Xunit
 
 open ParserTypes
 open Parsers
