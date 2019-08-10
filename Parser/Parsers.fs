@@ -49,15 +49,16 @@ let anyOf chars =
 
 let private consP h t = lift2P cons h t
 
-let rec sequence parserList = 
-    match parserList with
-    | [] -> returnP []
-    | head::tail -> consP head (sequence tail)
+let sequence parsers = 
+    let parsersList = parsers |> List.ofSeq
+    let rec inner = function
+        | [] -> returnP []
+        | head::tail -> consP head (inner tail)
+    inner parsersList
 
 let pstring str =
     str
-    |> List.ofSeq
-    |> List.map pchar
+    |> Seq.map pchar
     |> sequence
     |> mapP charListToString
 
