@@ -21,20 +21,17 @@ type ``choice tests`` () =
     
     let parsersBuilder = parserList (List.map pchar)
 
-    let successTest p (str:string) numParsers =
-        let parsers = parsersBuilder p str.[0] numParsers
-        let input = sprintf "%c%s" p str
-
-        run (Parsers.choice parsers) input
-
     [<Property>]
     member x.``a good match in a list of bad matches SHOULD succeed`` (p:char) (s:NonEmptyString) (numParsers:PositiveInt) =
         let str = s.Get
 
         str |> Seq.exists (fun c' -> c' = p) |> not
         ==> lazy
-            let result = successTest p str numParsers.Get
-        
+            let parsers = parsersBuilder p str.[0] numParsers.Get
+            let input = sprintf "%c%s" p str
+
+            let result = run (Parsers.choice parsers) input
+
             result |> checkMatched p
 
     [<Property>]
@@ -57,19 +54,16 @@ type ``anyOf test`` () =
 
     let parsersBuilder = parserList id
 
-    let successTest p (str:string) numParsers =
-        let parsers = parsersBuilder p str.[0] numParsers
-        let input = sprintf "%c%s" p str
-
-        run (Parsers.anyOf parsers) input
-
     [<Property>]
     member x.``a good match in a list of bad matches SHOULD succeed`` (p:char) (s:NonEmptyString) (numParsers:PositiveInt) =
         let str = s.Get
 
         str |> Seq.exists (fun c' -> c' = p) |> not
         ==> lazy
-            let result = successTest p str numParsers.Get
+            let parsers = parsersBuilder p str.[0] numParsers.Get
+            let input = sprintf "%c%s" p str
+
+            let result = run (Parsers.anyOf parsers) input
         
             result |> checkMatched p
 
