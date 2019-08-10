@@ -40,11 +40,11 @@ let orElse p1 p2 =
 
 let ( <|> ) = orElse
 
-let choice = List.reduce (<|>)
+let choice = Seq.reduce (<|>)
 
 let anyOf chars =
     chars 
-    |> List.map pchar
+    |> Seq.map pchar
     |> choice
 
 let private consP h t = lift2P cons h t
