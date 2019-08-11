@@ -22,3 +22,15 @@ let buildInput c1 c2 str =
     (Seq.append [c1;c2] str)
     |> Seq.toArray
     |> System.String
+
+let injectRnd char string =
+    let rand = new System.Random()
+    let idx = rand.Next(string |> List.length)
+
+    let rec inner c i l = 
+        match i, l with
+        | 0, _ -> c :: l
+        | _, h::t -> h::inner c (i-1) t
+        | _, [] -> failwith "Index out of range"
+
+    inner char idx string            

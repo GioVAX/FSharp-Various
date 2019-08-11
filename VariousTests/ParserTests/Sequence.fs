@@ -8,18 +8,7 @@ open Parsers
 
 open ParserTestsUtils
 
-let rand = new System.Random()
-
 type ``sequence tests`` () =
-
-    let inject char list =
-        let idx = rand.Next(list |> List.length)
-        let rec inner c i l = 
-            match i, l with
-            | 0, _ -> c :: l
-            | _, h::t -> h::inner c (i-1) t
-            | _, [] -> failwith "Index out of range"
-        inner char idx list            
 
     let successTest (input:string) numElems =
         let expected = 
@@ -67,7 +56,7 @@ type ``sequence tests`` () =
                 |> List.ofSeq
             let expected = sprintf "Expecting '%c'." c
 
-            let seq = inject c success
+            let seq = injectRnd c success
             let parsers = 
                 seq
                 |> List.map pchar
