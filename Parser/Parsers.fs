@@ -56,7 +56,7 @@ let sequence parsers =
         | head::tail -> consP head (inner tail)
     inner parsersList
 
-let pstring str =
+let pstring (str:string) =
     str
     |> Seq.map pchar
     |> sequence
