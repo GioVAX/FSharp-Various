@@ -2,7 +2,6 @@
 
 open FsCheck
 open FsCheck.Xunit
-open FsUnit.Xunit
 
 open ParserTypes
 open Parsers
@@ -36,17 +35,14 @@ type ``pstring tests`` () =
 
         not (s1'.Contains(c))
         ==> lazy
+        let input = s1' + s2.Get
         let s1'' = s1' 
                     |> List.ofSeq 
                     |> injectRnd c 
                     |> Array.ofList
                     |> System.String
-        let input = s1'' + s2.Get
-        let expected = sprintf "Got '%c'" c
+        let expected = sprintf "Expecting '%c'." c
 
-        let result = run (pstring s1') input
+        let result = run (pstring s1'') input
 
-        match result with
-        | Failure msg -> msg |> should endWith expected
-        | Success _ -> failwith "This should have failed!!!!"
-
+        result |> checkFailure expected
