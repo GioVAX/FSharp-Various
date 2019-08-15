@@ -70,6 +70,7 @@ let private parseZeroOrMore parser =
         | Success (firstValue, intermediateInput) -> 
             let other = innerFn intermediateInput
             match other with
+            //| Failure _ -> Success([firstValue], intermediateInput)
             | Failure _ -> Success([], input)
             | Success (otherValues, finalInput) -> Success (firstValue::otherValues, finalInput)
     Parser innerFn
