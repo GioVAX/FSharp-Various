@@ -3,8 +3,7 @@
 open ParserTypes
 open ParserMonad
 open ParserUtils
-
-//let private parser = new ParserBuilder()
+open ParserBuilder
 
 let pchar charToMatch = 
     let innerFn = function
@@ -77,11 +76,27 @@ let private parseZeroOrMore parser =
 
 let many parser = parseZeroOrMore parser
 
-let many1 parser =
-    let parseRemaining = parseZeroOrMore parser
-    parser >>= ( fun firstValue ->
-    parseRemaining >>= (fun otherValues ->
-        returnP (firstValue::otherValues)))
+let many1 p =
+    let parseFollowing = parseZeroOrMore p
+    let innerFn input = 
+        ParserBuilder.parser {
+            let! Success (r1, midInput) = run p input
+            let! Success (r2, remainingInput) = run parseFollowing midInput
+            return r1::r2, remainingInput
+        }
+    Parser innerFn
+
+    //ParserBuilder.parser {
+    //    let! firstValue = p
+    //    let! otherValues = parseRemaining
+    //    return! firstValue::otherValues
+    //}
+
+let many1' parser =
+    let parseFollowing = parseZeroOrMore parser
+    parser >>= ( fun r1 ->
+    parseFollowing >>= (fun rs ->
+        returnP (r1::rs)))
 
 let parseDigit = anyOf ['0'..'9']
 
