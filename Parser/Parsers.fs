@@ -69,34 +69,28 @@ let private parseZeroOrMore parser =
         | Success (firstValue, intermediateInput) -> 
             let other = innerFn intermediateInput
             match other with
-            //| Failure _ -> Success([firstValue], intermediateInput)
             | Failure _ -> Success([], input)
             | Success (otherValues, finalInput) -> Success (firstValue::otherValues, finalInput)
     Parser innerFn
 
 let many parser = parseZeroOrMore parser
 
-let many1 p =
-    let parseFollowing = parseZeroOrMore p
-    let innerFn input = 
-        ParserBuilder.parser {
-            let! Success (r1, midInput) = run p input
-            let! Success (r2, remainingInput) = run parseFollowing midInput
-            return r1::r2, remainingInput
-        }
-    Parser innerFn
+//let many1 p =
+//    let parseFollowing = parseZeroOrMore p
+//    let innerFn input = 
+//        ParserBuilder.parser {
+//            let! Success (r1, midInput) = run p input
+//            let! Success (r2, remainingInput) = run parseFollowing midInput
+//            return r1::r2, remainingInput
+//        }
+//    Parser innerFn
 
-    //ParserBuilder.parser {
-    //    let! firstValue = p
-    //    let! otherValues = parseRemaining
-    //    return! firstValue::otherValues
-    //}
+let many1 parser =
+    let parseAdditional = parseZeroOrMore parser
 
-let many1' parser =
-    let parseFollowing = parseZeroOrMore parser
-    parser >>= ( fun r1 ->
-    parseFollowing >>= (fun rs ->
-        returnP (r1::rs)))
+    parser          >>= (fun r1 ->
+    parseAdditional >>= (fun rs ->
+    r1::rs          |> returnP ))
 
 let parseDigit = anyOf ['0'..'9']
 
