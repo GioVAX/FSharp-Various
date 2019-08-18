@@ -92,21 +92,21 @@ let many1 parser =
     parseAdditional >>= (fun rs ->
     r1::rs          |> returnP ))
 
-let parseDigit = anyOf ['0'..'9']
+let pdigit = anyOf ['0'..'9']
 
 let optional parser =
     let some = parser |>> Some
     let none = returnP None
     some <|> none
 
-let parseInt =
+let pint =
     let resultToInt (sign, digits) =
         let number = digits |> charListToInt
         match sign with
         | Some _ -> -number
         | None -> number
         
-    let digits = many1 parseDigit
+    let digits = many1 pdigit
     
     //resultToInt <!> (opt (pchar '-') .>>. digits)
     optional (pchar '-') .>>. digits
