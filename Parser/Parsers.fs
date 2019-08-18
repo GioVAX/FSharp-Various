@@ -117,10 +117,10 @@ let private sepByHelper parser sep composer =
     parser .>> (optional sep)
     |> composer
 
-let sepBy1 parser separatorP =
+let separatedBy1 parser separatorP =
     sepByHelper parser separatorP many1
 
-let sepBy parser separatorP =
+let separatedBy parser separatorP =
     sepByHelper parser separatorP many
 
 (* 
