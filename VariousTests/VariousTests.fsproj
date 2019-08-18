@@ -23,6 +23,7 @@
     <Compile Include="ParserTests\many1.fs" />
     <Compile Include="ParserTests\optional.fs" />
     <Compile Include="ParserTests\pint.fs" />
+    <Compile Include="ParserTests\between.fs" />
   </ItemGroup>
 
   <ItemGroup>
