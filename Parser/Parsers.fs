@@ -3,7 +3,6 @@
 open ParserTypes
 open ParserMonad
 open ParserUtils
-open ParserBuilder
 
 let pchar charToMatch = 
     let innerFn = function
@@ -100,16 +99,15 @@ let optional parser =
     some <|> none
 
 let pint =
-    let resultToInt (sign, digits) =
-        let number = digits |> charListToInt
-        match sign with
-        | Some _ -> -number
-        | None -> number
+    let resultToInt = function
+        | (Some _, digits) -> -(digits |> charListToInt)
+        | (None, digits) -> digits |> charListToInt
         
-    let digits = many1 pdigit
+    let pDigits = many1 pdigit
+    let pSign = '-' |> pchar |> optional
     
-    //resultToInt <!> (opt (pchar '-') .>>. digits)
-    optional (pchar '-') .>>. digits
+    //resultToInt <!> (sign .>>. digits)
+    pSign .>>. pDigits
     |>> resultToInt
 
 let between before parser after =
