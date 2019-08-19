@@ -24,6 +24,7 @@
     <Compile Include="ParserTests\optional.fs" />
     <Compile Include="ParserTests\pint.fs" />
     <Compile Include="ParserTests\between.fs" />
+    <Compile Include="ParserTests\separatedBy.fs" />
   </ItemGroup>
 
   <ItemGroup>
