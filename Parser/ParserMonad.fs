@@ -4,10 +4,12 @@ open ParserTypes
 
 let bindP f p =
     let innerFn input = 
-        match run p input with
+        let result = run p input
+        match result with
         | Failure err -> Failure err
-        | Success (v1, remainingInput) 
-            -> run (f v1) remainingInput
+        | Success (v1, remainingInput) ->
+            let p2 = f v1
+            run p2 remainingInput
     Parser innerFn
 
 let ( >>= ) p f = bindP f p
