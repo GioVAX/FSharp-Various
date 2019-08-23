@@ -29,7 +29,7 @@ let private checkSecondIsNOTCalled c1 c2 s parserBuilder =
     let result = run parser input
 
     result
-    |> checkFailure "Expecting"
+    |> checkFailure "Unexpected"
 
 type ``-> prefix`` () =
 

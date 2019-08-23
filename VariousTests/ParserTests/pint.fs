@@ -43,4 +43,4 @@ type ``pint tests`` () =
        
         let result = run pint s'
 
-        result |> checkFailure "Expecting '9'."
+        result |> checkFailure "Unexpected"

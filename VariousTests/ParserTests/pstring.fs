@@ -41,8 +41,7 @@ type ``pstring tests`` () =
                     |> injectRnd c 
                     |> Array.ofList
                     |> System.String
-        let expected = sprintf "Expecting '%c'." c
 
         let result = run (pstring s1'') input
 
-        result |> checkFailure expected
+        result |> checkFailure "Unexpected"

@@ -75,9 +75,8 @@ type ``many1 tests`` () =
 
         (s'.[0] <> c)
         ==> lazy
-        let expected = c |> sprintf "Expecting '%c'."
 
         let result = zeroMatches c s'
 
-        result |> checkFailure expected
+        result |> checkFailure "Unexpected"
 

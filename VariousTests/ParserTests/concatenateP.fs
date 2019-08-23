@@ -48,19 +48,17 @@ type ``-> prefix`` () =
     member x.``when fails on the first parser SHOULD specify the failure was the first parser`` (c1:char) (c2:char) (str:NonWhiteSpaceString) =
         ((str.Get.Length > 0) && (c1 <> c2))
         ==> lazy
-        let expectedMsg = sprintf "Expecting '%c'." c1
         
         failure1stParse concatenateP c1 c2 str.Get
-        |> checkFailure expectedMsg
+        |> checkFailure "Unexpected"
 
     [<Property>]
     member x.``when fails on the second parser SHOULD specify the failure was the second parser`` (c1: char) (c2:char) (str:NonWhiteSpaceString) =
         (str.Get.Length > 0 && c1 <> c2)
         ==> lazy
-        let expectedMsg = sprintf "Expecting '%c'." c2
         
         failure2ndParse concatenateP c1 c2 str.Get
-        |> checkFailure expectedMsg
+        |> checkFailure  "Unexpected"
 
 type ``-> infix`` () =
     [<Property>]
@@ -83,19 +81,17 @@ type ``-> infix`` () =
     member x.``when fails on the first parser SHOULD specify the failure was the first parser`` (c1:char) (c2:char) (str:NonWhiteSpaceString) =
         ((str.Get.Length > 0) && (c1 <> c2))
         ==> lazy
-        let expectedMsg = sprintf "Expecting '%c'." c1
         
         failure1stParse (.>>.) c1 c2 str.Get
-        |> checkFailure expectedMsg
+        |> checkFailure  "Unexpected"
 
     [<Property>]
     member x.``when fails on the second parser SHOULD specify the failure was the second parser`` (c1: char) (c2:char) (str:NonWhiteSpaceString) =
         (str.Get.Length > 0 && c1 <> c2)
         ==> lazy
-        let expectedMsg = sprintf "Expecting '%c'." c2
         
         failure2ndParse (.>>.) c1 c2 str.Get
-        |> checkFailure expectedMsg
+        |> checkFailure  "Unexpected"
 
 type ``-> discard second match`` () =
     [<Property>]
@@ -118,19 +114,17 @@ type ``-> discard second match`` () =
     member x.``when fails on the first parser SHOULD specify the failure was the first parser`` (c1:char) (c2:char) (str:NonWhiteSpaceString) =
         ((str.Get.Length > 0) && (c1 <> c2))
         ==> lazy
-        let expectedMsg = sprintf "Expecting '%c'." c1
         
         failure1stParse (.>>) c1 c2 str.Get
-        |> checkFailure expectedMsg
+        |> checkFailure  "Unexpected"
 
     [<Property>]
     member x.``when fails on the second parser SHOULD specify the failure was the second parser`` (c1: char) (c2:char) (str:NonWhiteSpaceString) =
         (str.Get.Length > 0 && c1 <> c2)
         ==> lazy
-        let expectedMsg = sprintf "Expecting '%c'." c2
         
         failure2ndParse (.>>) c1 c2 str.Get
-        |> checkFailure expectedMsg
+        |> checkFailure  "Unexpected"
 
 type ``-> discard first match`` () =
     [<Property>]
@@ -153,16 +147,14 @@ type ``-> discard first match`` () =
     member x.``when fails on the first parser SHOULD specify the failure was the first parser`` (c1:char) (c2:char) (str:NonWhiteSpaceString) =
         ((str.Get.Length > 0) && (c1 <> c2))
         ==> lazy
-        let expectedMsg = sprintf "Expecting '%c'." c1
         
         failure1stParse (>>.) c1 c2 str.Get
-        |> checkFailure expectedMsg
+        |> checkFailure  "Unexpected"
 
     [<Property>]
     member x.``when fails on the second parser SHOULD specify the failure was the second parser`` (c1: char) (c2:char) (str:NonWhiteSpaceString) =
         (str.Get.Length > 0 && c1 <> c2)
         ==> lazy
-        let expectedMsg = sprintf "Expecting '%c'." c2
         
         failure2ndParse (>>.) c1 c2 str.Get
-        |> checkFailure expectedMsg
+        |> checkFailure  "Unexpected"

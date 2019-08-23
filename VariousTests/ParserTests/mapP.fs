@@ -23,7 +23,7 @@ let private doTest num str parserBuilder checkFn =
 let private failingInput = "Failure"
 
 let private chkSuccess = checkMatched
-let private chkFail = (fun n -> checkFailure "Expecting")
+let private chkFail = (fun n -> checkFailure "Unexpected")
 
 type ``-> prefix`` () =
 

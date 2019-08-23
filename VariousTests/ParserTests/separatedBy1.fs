@@ -76,8 +76,7 @@ type ``separatedBy1 tests`` () =
                     | 'a' -> 'b'
                     | _ -> 'a'
         let parser = separatedBy1 pint (sep |> pchar)
-        let expected = sprintf "Expecting '9'."
 
         let result = run parser s'
 
-        result |> checkFailure expected
+        result |> checkFailure "Unexpected"

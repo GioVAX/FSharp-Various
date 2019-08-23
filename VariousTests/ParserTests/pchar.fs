@@ -57,12 +57,11 @@ type ``-> parse one char`` () =
                         | 'a' -> 'b'
                         | _ -> 'a'
         let parser = pchar c
-        let expectedMsg = sprintf "Expecting '%c'. Got '%c'" c s.[0] 
 
         let result = run parser s
 
         result
-        |> checkFailure expectedMsg
+        |> checkFailure "Unexpected"
 
     [<Property>]
     member x.``Parsing for the wrong first char SHOULD return the expected char`` (str: NonWhiteSpaceString) =
@@ -71,9 +70,8 @@ type ``-> parse one char`` () =
                         | 'a' -> 'b'
                         | _ -> 'a'
         let parser = pchar c
-        let expectedMsg = sprintf "Expecting '%c'." c
 
         let result = run parser s
 
         result
-        |> checkFailure expectedMsg
+        |> checkFailure "Unexpected"
