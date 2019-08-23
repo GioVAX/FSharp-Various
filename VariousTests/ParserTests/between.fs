@@ -46,11 +46,10 @@ type ``between tests`` () =
         ==> lazy
         let input = buildInput after btwin after s'
         let parser = between (pchar before) (pchar btwin) (pchar after)
-        let expected = sprintf "Expecting '%c'." before
 
         let result = run parser input
 
-        result |> checkFailure expected
+        result |> checkFailure "Unexpected '"
 
     [<Property>]
     member x.``lack of the second match SHOULD fail with the correct message`` (before:char) (after:char) (btwin:char) (s:NonEmptyString) =
@@ -60,11 +59,10 @@ type ``between tests`` () =
         ==> lazy
         let input = buildInput before after after s'
         let parser = between (pchar before) (pchar btwin) (pchar after)
-        let expected = sprintf "Expecting '%c'." btwin
 
         let result = run parser input
 
-        result |> checkFailure expected
+        result |> checkFailure "Unexpected '"
 
     [<Property>]
     member x.``lack of the third match SHOULD fail with the correct message`` (before:char) (after:char) (btwin:char) (s:NonEmptyString) =
@@ -74,11 +72,10 @@ type ``between tests`` () =
         ==> lazy
         let input = buildInput before btwin btwin s'
         let parser = between (pchar before) (pchar btwin) (pchar after)
-        let expected = sprintf "Expecting '%c'." after
 
         let result = run parser input
 
-        result |> checkFailure expected
+        result |> checkFailure "Unexpected '"
 
     [<Property>]
     member x.``lack of all the matches SHOULD fail for the first match`` (before:char) (after:char) (btwin:char) (s:NonEmptyString) =
@@ -87,8 +84,7 @@ type ``between tests`` () =
         before <> s'.[0]
         ==> lazy
         let parser = between (pchar before) (pchar btwin) (pchar after)
-        let expected = sprintf "Expecting '%c'." before
 
         let result = run parser s'
 
-        result |> checkFailure expected
+        result |> checkFailure "Unexpected '"

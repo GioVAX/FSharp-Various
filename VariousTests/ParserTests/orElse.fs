@@ -64,10 +64,9 @@ type ``-> prefix`` () =
     member x.``when neither match SHOULD specify the error was the second parser`` (c1:char) (c2:char) (c3:char) (str:NonWhiteSpaceString) =
         ((c1 <> c2) && (c1 <> c3) && (c2 <> c3))
         ==> lazy
-        let expectedMsg = sprintf "Expecting '%c'." c2
 
         let result = failingParse orElse c1 c2 c3 str.Get
-        result |> checkFailure expectedMsg
+        result |> checkFailure "Unexpected"
 
 type ``-> infix`` () =
 
@@ -113,7 +112,6 @@ type ``-> infix`` () =
     member x.``when neither match SHOULD specify the error was the second parser`` (c1:char) (c2:char) (c3:char) (str:NonWhiteSpaceString) =
         ((c1 <> c2) && (c1 <> c3) && (c2 <> c3))
         ==> lazy
-        let expectedMsg = sprintf "Expecting '%c'." c2
 
         let result = failingParse (<|>) c1 c2 c3 str.Get
-        result |> checkFailure expectedMsg
+        result |> checkFailure "Unexpected"

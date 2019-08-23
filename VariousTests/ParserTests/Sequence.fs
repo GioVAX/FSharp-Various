@@ -54,7 +54,6 @@ type ``sequence tests`` () =
             let success = 
                 input.Substring(0, numElems)
                 |> List.ofSeq
-            let expected = sprintf "Expecting '%c'." c
 
             let seq = injectRnd c success
             let parsers = 
@@ -63,4 +62,4 @@ type ``sequence tests`` () =
 
             let result = run (Parsers.sequence parsers) input
 
-            result |> checkFailure expected
+            result |> checkFailure "Unexpected"

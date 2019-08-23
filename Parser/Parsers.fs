@@ -4,17 +4,20 @@ open ParserTypes
 open ParserMonad
 open ParserUtils
 
-let pchar charToMatch = 
-    let innerFn = function
-        | "" 
-        | null -> 
+let internal satisfy predicate =
+    let innerFn input = 
+        if input = null || input = "" then
             Failure "No more input"
-        | Prefix charToMatch remaining -> 
-            Success (charToMatch,remaining)
-        | str ->    
-            sprintf "Expecting '%c'. Got '%c'" charToMatch str.[0]
-            |> Failure    
+        else
+            let first = input.[0]
+            if predicate first then
+                Success (first,input.[1..])
+            else
+                sprintf "Unexpected '%c'" first
+                |> Failure
     Parser innerFn        
+
+let pchar charToMatch = satisfy ((=) charToMatch)
 
 let andThen = concatenateP
 

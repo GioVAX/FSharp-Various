@@ -45,9 +45,7 @@ type ``choice tests`` () =
 
         let result = run (Parsers.choice parsers) input
         
-        let expected = sprintf "Expecting '%c'." first
-
-        result |> checkFailure expected
+        result |> checkFailure "Unexpected"
 
 type ``anyOf test`` () =
 
@@ -78,6 +76,4 @@ type ``anyOf test`` () =
 
         let result = run (Parsers.anyOf parsers) input
         
-        let expected = sprintf "Expecting '%c'." first
-
-        result |> checkFailure expected
+        result |> checkFailure "Unexpected"
