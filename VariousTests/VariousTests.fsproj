@@ -26,6 +26,7 @@
     <Compile Include="ParserTests\between.fs" />
     <Compile Include="ParserTests\separatedBy.fs" />
     <Compile Include="ParserTests\separatedBy1.fs" />
+    <Compile Include="lcsTests.fs" />
   </ItemGroup>
 
   <ItemGroup>
