@@ -11,6 +11,7 @@
     <Compile Include="RunProcess.fs" />
     <Compile Include="various.fs" />
     <Compile Include="lcs.fs" />
+    <Compile Include="trie.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="4.6.2" />
