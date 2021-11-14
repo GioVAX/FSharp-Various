@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netcoreapp5.0</TargetFramework>
+	</PropertyGroup>
   <ItemGroup>
     <Compile Include="Parser\ParserTypes.fs" />
     <Compile Include="Parser\ParserBuilder.fs" />
@@ -14,6 +14,6 @@
     <Compile Include="trie.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.6.2" />
+    <PackageReference Update="FSharp.Core" Version="6.0.1" />
   </ItemGroup>
 </Project>
